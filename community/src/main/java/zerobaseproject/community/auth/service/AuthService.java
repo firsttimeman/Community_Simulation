@@ -16,10 +16,9 @@ public class AuthService {
 
     public void authenticateUser(LoginDTO loginDTO) {
 
-        Member member = memberRepository.findByEmail(loginDTO.getEmail());
-        if (member == null) {
-            throw new RuntimeException("이메일이 존재하지 않습니다.");
-        }
+//        Member member = memberRepository.findByEmail(loginDTO.getEmail());
+        Member member = memberRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new RuntimeException("이메일이 존재하지 않습니다."));
 
         if (!passwordEncoder.matches(loginDTO.getPassword(), member.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");

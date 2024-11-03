@@ -3,11 +3,15 @@ package zerobaseproject.community.member.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import zerobaseproject.community.global.exception.ErrorCode;
+import zerobaseproject.community.global.exception.MemberException;
 import zerobaseproject.community.global.type.UserRoles;
 import zerobaseproject.community.member.dto.MemberDTO;
 import zerobaseproject.community.member.dto.RegisterDTO;
 import zerobaseproject.community.member.entity.Member;
 import zerobaseproject.community.member.repository.MemberRepository;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,11 +24,10 @@ public class MemberService {
 
         String email = registerDTO.getEmail();
 
-        if(memberRepository.existsByEmail(email)) {
-            throw new RuntimeException("이미 존재하는 이메일 입니다");
-        }
-
-
+                memberRepository.findByEmail(email)
+                .ifPresent(member -> {
+                    throw new MemberException(ErrorCode.ALREADY_EXIST_EMAIL);
+                });
 
         Member saved = memberRepository.save(
                 Member.builder()
