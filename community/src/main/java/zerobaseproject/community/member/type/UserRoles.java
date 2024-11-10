@@ -1,4 +1,4 @@
-package zerobaseproject.community.global.type;
+package zerobaseproject.community.member.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

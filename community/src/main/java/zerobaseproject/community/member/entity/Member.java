@@ -2,14 +2,14 @@ package zerobaseproject.community.member.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import zerobaseproject.community.comment.entity.Comment;
 import zerobaseproject.community.global.entity.BaseEntity;
-import zerobaseproject.community.global.type.UserRoles;
+import zerobaseproject.community.member.type.UserRoles;
+import zerobaseproject.community.posting.entity.Posting;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,26 +23,34 @@ import java.util.List;
 @Entity
 public class Member extends BaseEntity implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "MEMBER_ID")
+    private Long memberId;
 
     @Email
-    @NotBlank
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank
+    @Column(nullable = false, length = 50)
     private String name;
 
-    @NotBlank
+    @Column(nullable = false)
     private String password;
 
-    @NotBlank
+    @Column(length = 20)
     private String phoneNumber;
 
+    @Column(length = 100)
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @Column(nullable = false)
     private UserRoles userRoles;
+
+    @OneToMany(mappedBy = "member")
+    private List<Posting> postings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

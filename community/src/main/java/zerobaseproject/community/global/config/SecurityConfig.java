@@ -53,7 +53,8 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/service-login", "/member/**", "/reissue", "/service-logout", "/h2-console/**").permitAll()
+                        .requestMatchers("/login", "/member/**", "/reissue", "/service-logout", "/h2-console/**",
+                                "/posting/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
@@ -61,11 +62,12 @@ public class SecurityConfig {
         http
                 .headers((headers) -> headers.frameOptions().disable());
 
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+
 
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterAfter(new JWTFilter(jwtUtil), LoginFilter.class);
 //        http
 //                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 

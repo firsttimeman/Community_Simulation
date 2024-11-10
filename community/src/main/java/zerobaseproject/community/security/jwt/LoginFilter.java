@@ -79,7 +79,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         addRefreshEntity(email, refresh, 86400000L);
 
-        response.setHeader("access", access);
+        response.setHeader("Authorization", "Bearer " + access);
         response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
 

@@ -21,7 +21,7 @@ public class LoginController {
     private final AuthService authService;
     private final CustomLogoutHandler customLogoutHandler;
 
-    @PostMapping("/service-login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO) {
         authService.authenticateUser(loginDTO);
 
