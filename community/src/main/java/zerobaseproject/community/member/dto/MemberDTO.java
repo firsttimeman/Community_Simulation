@@ -1,13 +1,10 @@
 package zerobaseproject.community.member.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import zerobaseproject.community.global.type.UserRoles;
+import zerobaseproject.community.member.type.UserRoles;
 import zerobaseproject.community.member.entity.Member;
 
-import javax.management.relation.Role;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,23 +13,27 @@ import javax.management.relation.Role;
 @Builder
 public class MemberDTO {
 
-    private Long userId;
+    private Long userId; // TODO 추후 제거할것
     private String email;
     private String password;
     private String name;
     private String phoneNumber;
     private String address;
     private UserRoles userRoles;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 
     public static MemberDTO fromEntity(Member member) {
         return MemberDTO.builder()
-                .userId(member.getUserId())
+                .userId(member.getMemberId()) // TODO 추후 제거할것
                 .password(member.getPassword())
                 .email(member.getEmail())
                 .name(member.getName())
                 .phoneNumber(member.getPhoneNumber())
                 .address(member.getAddress())
                 .userRoles(member.getUserRoles())
+                .createDate(member.getCreateDate())
+                .updateDate(member.getUpdateDate())
                 .build();
     }
 
