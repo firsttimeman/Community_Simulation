@@ -15,6 +15,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import zerobaseproject.community.auth.jwt.JwtProvider;
+import zerobaseproject.community.auth.repository.TokenRepository;
 import zerobaseproject.community.global.exception.ErrorCode;
 import zerobaseproject.community.global.exception.TokenException;
 
@@ -29,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String TOKEN_PREFIX = "Bearer ";
 
     private final JwtProvider jwtProvider;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -43,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = jwtProvider.getUserEmail(token);
 
                 // 블랙리스트에 등록된 토큰 확인
-                if (redisTemplate.opsForValue().get("BL:" + email + ":" + token) != null) {
+                if (tokenRepository.isTokenInBlacklist(email, token)) {
                     log.error("블랙리스트에 등록된 토큰으로 접근 시도");
                     throw new TokenException(ErrorCode.INVALID_OR_EXPIRED_REFRESH_TOKEN);
                 }

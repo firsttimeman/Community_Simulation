@@ -20,45 +20,41 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<String>> validateError(MethodArgumentNotValidException ex) {
-
+    public ResponseEntity<List<ErrorResponse>> validateError(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
 
-        List<String> collect = bindingResult.getFieldErrors()
-                .stream().map(error -> error.getField() + ": " + error.getDefaultMessage())
+        List<ErrorResponse> errors = bindingResult.getFieldErrors()
+                .stream()
+                .map(error -> new ErrorResponse(error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.badRequest().body(collect);
+        return ResponseEntity.badRequest().body(errors);
     }
 
 
     @ExceptionHandler(MemberException.class)
-    public ResponseEntity<String> memberException(MemberException e) {
-        return new ResponseEntity<>(e.getErrorCode().getDescription(), e.getErrorCode().getStatus());
+    public ResponseEntity<ErrorResponse> handleMemberException(MemberException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode().name(), ex.getErrorCode().getDescription());
+        return new ResponseEntity<>(errorResponse, ex.getErrorCode().getStatus());
     }
 
-
-
     @ExceptionHandler(TokenException.class)
-    public ResponseEntity<Map<String, String>> handleTokenException(TokenException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("code", ex.getErrorCode().name());
-        response.put("message", ex.getErrorCode().getDescription());
-
-        return new ResponseEntity<>(response, ex.getErrorCode().getStatus());
+    public ResponseEntity<ErrorResponse> handleTokenException(TokenException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode().name(), ex.getErrorCode().getDescription());
+        return new ResponseEntity<>(errorResponse, ex.getErrorCode().getStatus());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(HttpMessageNotReadableException ex) {
-
-            return new ResponseEntity<>(ErrorCode.INVALID_ENUM_VALUE.getDescription(),
-                    ErrorCode.INVALID_ENUM_VALUE.getStatus());
-
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        ErrorCode errorCode = ErrorCode.INVALID_ENUM_VALUE;
+        ErrorResponse errorResponse = new ErrorResponse(errorCode.name(), errorCode.getDescription());
+        return new ResponseEntity<>(errorResponse, errorCode.getStatus());
     }
-    // 그 외 예외 처리
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
+        ErrorResponse errorResponse = new ErrorResponse("INTERNAL_SERVER_ERROR", "서버 오류가 발생했습니다.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
 }

@@ -1,5 +1,6 @@
 package zerobaseproject.community.global.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import zerobaseproject.community.auth.filter.JwtAuthenticationFilter;
 
+import java.util.Map;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ import zerobaseproject.community.auth.filter.JwtAuthenticationFilter;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -60,8 +64,15 @@ public class SecurityConfig {
         return (request, response, accessDeniedException) -> {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write("{\"code\":\"NO_PERMISSION\", \"message\":\"접근 권한이 없습니다.\"}");
+            Map<String, String> errorResponse = Map.of(
+                    "code", "NO_PERMISSION",
+                    "message", "접근 권한이 없습니다."
+            );
+
+            String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+            response.getWriter().write(jsonResponse);
         };
+
     }
 
     @Bean
@@ -69,7 +80,12 @@ public class SecurityConfig {
         return (request, response, authException) -> {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write("{\"code\":\"AUTH_FAILED\", \"message\":\"인증 실패\"}");
+            Map<String, String> errorResponse = Map.of(
+                    "code", "AUTH_FAILED",
+                    "message", "인증 실패"
+            );
+            String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+            response.getWriter().write(jsonResponse);
         };
     }
 
