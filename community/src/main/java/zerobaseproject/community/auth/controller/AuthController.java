@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zerobaseproject.community.auth.dto.RegisterDTO;
 import zerobaseproject.community.auth.dto.SignInDto;
+import zerobaseproject.community.auth.dto.SignOutRequestDto;
 import zerobaseproject.community.auth.service.AuthService;
 import zerobaseproject.community.global.exception.SuccessCode;
 
@@ -38,8 +39,8 @@ public class AuthController {
 
     @PostMapping("/sign-out")
     public ResponseEntity<String> signOut(@RequestHeader("Authorization") String accessToken,
-                                          @RequestBody Map<String, String> requestBody) {
-        String email = requestBody.get("email");
+                                          @RequestBody SignOutRequestDto signOutRequestDto) {
+        String email = signOutRequestDto.getEmail();
         String token = accessToken.replace("Bearer ", "");  // Bearer 제거
         authService.signOut(email, token);
         return new ResponseEntity<>(SuccessCode.SIGN_OUT_SUCCESS.getMessage(), SuccessCode.SIGN_OUT_SUCCESS.getStatus());

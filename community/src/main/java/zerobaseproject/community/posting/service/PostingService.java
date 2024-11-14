@@ -59,9 +59,8 @@ public class PostingService {
         post.setTitle(requestDTO.getTitle());
         post.setContent(requestDTO.getContent());
         post.setCategory(requestDTO.getCategory());
-        Posting updatedPost = postingRepository.save(post);
 
-        return PostingResponseDTO.fromEntity(updatedPost);
+        return PostingResponseDTO.fromEntity(post);
     }
 
 
