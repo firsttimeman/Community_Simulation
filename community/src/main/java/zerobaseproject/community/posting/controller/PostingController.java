@@ -1,5 +1,6 @@
 package zerobaseproject.community.posting.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,7 @@ public class PostingController {
     // 게시물 생성
     @PostMapping("/createpost")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PostingResponseDTO> createPosting(@RequestBody PostingRequestDTO requestDTO) {
+    public ResponseEntity<PostingResponseDTO> createPosting(@Valid @RequestBody PostingRequestDTO requestDTO) {
         PostingResponseDTO responseDTO = postingService.createPosting(requestDTO, getCurrentUserEmail());
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import zerobaseproject.community.auth.repository.TokenRepository;
 import zerobaseproject.community.global.exception.ErrorCode;
 import zerobaseproject.community.global.exception.MemberException;
 import zerobaseproject.community.global.exception.TokenException;
@@ -26,7 +27,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final TokenRepository tokenRepository;
 
     // 회원가입 메서드 추가
     public MemberDTO signUp(RegisterDTO registerDTO) {
@@ -65,7 +66,7 @@ public class AuthService {
         String refreshToken = jwtProvider.createRefreshToken(member.getEmail());
 
         // Redis에 Refresh Token 저장 (7일 만료)
-        redisTemplate.opsForValue().set("RT:" + member.getEmail(), refreshToken, 7, TimeUnit.DAYS);
+        tokenRepository.saveRefreshToken(member.getEmail(), refreshToken, 7, TimeUnit.DAYS);
 
         return SignInDto.Response.builder()
                 .accessToken(accessToken)
@@ -75,7 +76,7 @@ public class AuthService {
 
     public String reissueToken(String refreshToken) {
         String email = jwtProvider.getUserEmail(refreshToken);
-        String storedRefreshToken = redisTemplate.opsForValue().get("RT:" + email);
+        String storedRefreshToken = tokenRepository.getRefreshToken(email);
 
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
             throw new TokenException(ErrorCode.INVALID_OR_EXPIRED_REFRESH_TOKEN);
@@ -88,14 +89,12 @@ public class AuthService {
 
     public void signOut(String email, String accessToken) {
         // Refresh Token 삭제
-        String redisKey = "RT:" + email;
-        redisTemplate.delete(redisKey);
+        tokenRepository.deleteRefreshToken(email);
         log.info("레디스 키 삭제: {}", email);
 
-        // Access Token 블랙리스트로 추가
-        long expiration = jwtProvider.getExpiration(accessToken); // 만료 시간 가져오기
-        String blackListKey = "BL:" + email + ":" + accessToken;
-        redisTemplate.opsForValue().set(blackListKey, "logged-out", expiration, TimeUnit.MILLISECONDS);
+        // Access Token 블랙리스트에 추가
+        long expiration = jwtProvider.getExpiration(accessToken);
+        tokenRepository.addToBlacklist(email, accessToken, expiration, TimeUnit.MILLISECONDS);
         log.info("블랙리스트에 등록된 Access Token (사용자: {}): {}", email, accessToken);
     }
 
