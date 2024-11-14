@@ -1,8 +1,8 @@
 package zerobaseproject.community.posting.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import zerobaseproject.community.posting.customannotation.EnumValidator;
 import zerobaseproject.community.posting.type.Category;
 
 @Getter
@@ -18,7 +18,7 @@ public class PostingRequestDTO {
         @NotNull
         private String content;
 
-        @EnumValidator(enumClass = Category.class, message = "유효하지 않은 카테고리입니다.")
+        @NotNull(message = "카테고리를 선택해 주세요.")
         private Category category;
 
 

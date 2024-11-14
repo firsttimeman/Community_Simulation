@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import zerobaseproject.community.global.entity.BaseEntity;
 import zerobaseproject.community.member.entity.Member;
-import zerobaseproject.community.posting.customannotation.EnumValidator;
 import zerobaseproject.community.posting.type.Category;
 
 @Entity
@@ -31,7 +30,6 @@ public class Posting extends BaseEntity {
     private String content;
 
     @Enumerated(EnumType.STRING)
-    @EnumValidator(enumClass = Category.class, message = "유효하지 않는 카테고리 입니다")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)

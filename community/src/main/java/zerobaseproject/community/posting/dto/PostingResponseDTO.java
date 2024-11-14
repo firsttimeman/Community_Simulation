@@ -19,6 +19,7 @@ public class PostingResponseDTO {
     private String content;
     private Category category;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String email;
 
     public static PostingResponseDTO fromEntity(Posting posting) {
@@ -29,6 +30,7 @@ public class PostingResponseDTO {
                 .content(posting.getContent())
                 .category(posting.getCategory())
                 .createdAt(posting.getCreateDate())
+                .updatedAt(posting.getUpdateDate())
                 .build();
     }
 

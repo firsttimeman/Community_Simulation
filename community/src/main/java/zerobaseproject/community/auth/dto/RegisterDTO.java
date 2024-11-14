@@ -1,13 +1,13 @@
-package zerobaseproject.community.member.dto;
+package zerobaseproject.community.auth.dto;
 
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import zerobaseproject.community.member.entity.Member;
-
-import java.time.LocalDateTime;
+import zerobaseproject.community.member.type.UserRoles;
 
 @Builder
 @Getter
@@ -25,19 +25,21 @@ public class RegisterDTO {
     @NotBlank(message = "비밀번호를 입력해주세요")
     private String password;
 
+    @NotNull(message = "사용자 역할을 설정해 주세요")
+    private UserRoles userRoles;
+
     private String address;
 
     private String phoneNumber;
 
-
     public static RegisterDTO from(Member member) {
-
         return RegisterDTO.builder()
                 .email(member.getEmail())
                 .name(member.getName())
-                .password(member.getPassword()) // TODO 추후 제거할것
+                .password(member.getPassword())
                 .address(member.getAddress())
                 .phoneNumber(member.getPhoneNumber())
+                .userRoles(member.getUserRoles())
                 .build();
     }
 }
