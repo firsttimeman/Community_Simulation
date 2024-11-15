@@ -4,9 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import zerobaseproject.community.comment.entity.Comment;
 import zerobaseproject.community.global.entity.BaseEntity;
 import zerobaseproject.community.member.entity.Member;
 import zerobaseproject.community.posting.type.Category;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +38,9 @@ public class Posting extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @OneToMany(mappedBy = "posting", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
 
 }
