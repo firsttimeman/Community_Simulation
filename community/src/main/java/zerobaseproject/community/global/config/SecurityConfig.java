@@ -36,13 +36,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .headers().frameOptions().disable() // H2 콘솔 사용을 위해 frameOptions 비활성화
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/sign-up", "/auth/sign-in", "/h2-console/**").permitAll() // H2 콘솔에 대한 접근 허용
+                        .requestMatchers("/auth/sign-up", "/auth/sign-in", "/comments/posting/**",
+                                "/posting/search", "/posting/all", "/posting/{postingId}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling()

@@ -19,7 +19,9 @@ public enum ErrorCode {
     INVALID_ENUM_VALUE(HttpStatus.BAD_REQUEST, "유효하지 않은 값입니다"),
 
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
-    UNAUTHORIZED_ACTION(HttpStatus.FORBIDDEN, "작성자만 글을 수정할 수 있습니다.");
+    UNAUTHORIZED_ACTION(HttpStatus.FORBIDDEN, "작성자만 글을 수정할 수 있습니다."),
+
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다.");
 
 
     private final HttpStatus status;

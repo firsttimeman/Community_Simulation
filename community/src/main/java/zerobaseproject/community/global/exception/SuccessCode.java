@@ -10,7 +10,9 @@ public enum SuccessCode {
     SIGN_UP_SUCCESS(HttpStatus.CREATED, "회원가입이 완료되었습니다."),
     SIGN_IN_SUCCESS(HttpStatus.OK, "로그인 성공"),
     SIGN_OUT_SUCCESS(HttpStatus.OK, "로그아웃 성공"),
-    TOKEN_REFRESH_SUCCESS(HttpStatus.OK, "Access Token이 재발급되었습니다.");
+    TOKEN_REFRESH_SUCCESS(HttpStatus.OK, "Access Token이 재발급되었습니다."),
+    COMMENT_DELETE_SUCCESS(HttpStatus.OK, "댓글이 성공적으로 삭제되었습니다."),
+    POST_DELETE_SUCCESS(HttpStatus.OK, "게시물이 성공적으로 삭제되었습니다.");
 
     private final HttpStatus status;
     private final String message;
