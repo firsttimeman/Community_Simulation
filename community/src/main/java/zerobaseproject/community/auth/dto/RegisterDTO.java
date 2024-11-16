@@ -34,9 +34,8 @@ public class RegisterDTO {
     @Size(max = 100, message = "주소는 최대 100자까지 입력할 수 있습니다.")
     private String address;
 
-    @Pattern(regexp = "^\\d{10,15}$", message = "전화번호는 10~15자리의 숫자여야 합니다.")
+    @Pattern(regexp = "^(010-\\d{4}-\\d{4})$", message = "전화번호 형식이 올바르지 않습니다. 010-XXXX-XXXX 형식으로 입력해주세요.")
     private String phoneNumber;
-
     public static RegisterDTO from(Member member) {
         return RegisterDTO.builder()
                 .email(member.getEmail())

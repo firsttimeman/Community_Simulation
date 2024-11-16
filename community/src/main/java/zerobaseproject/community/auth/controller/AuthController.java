@@ -11,8 +11,6 @@ import zerobaseproject.community.auth.dto.SignOutRequestDto;
 import zerobaseproject.community.auth.service.AuthService;
 import zerobaseproject.community.global.exception.SuccessCode;
 
-import java.util.Map;
-
 /**
  * 인증 관련 요청을 처리하는 컨트롤러 클래스입니다.
  * 회원가입, 로그인, 로그아웃, 토큰 갱신과 관련된 기능을 제공합니다.
@@ -56,7 +54,7 @@ public class AuthController {
     /**
      * 로그아웃 요청을 처리합니다.
      *
-     * @param accessToken 로그아웃할 사용자의 Access Token
+     * @param accessToken       로그아웃할 사용자의 Access Token
      * @param signOutRequestDto 로그아웃 요청의 이메일이 포함된 DTO 객체
      * @return 로그아웃 성공 메시지와 HTTP 상태 코드를 반환합니다.
      */

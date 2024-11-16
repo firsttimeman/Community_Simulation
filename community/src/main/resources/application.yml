@@ -1,0 +1,27 @@
+spring:
+  jwt:
+    secret: "vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb"
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/mycommunity?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  h2:
+    console:
+      enabled: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      # password: "your_redis_password" # Uncomment and set if Redis requires a password
